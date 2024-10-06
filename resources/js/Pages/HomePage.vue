@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/vue3';
 
 </script>
 <template>
-    <div class="flex flex-col justify-center items-center h-screen">
+    <div class="flex flex-col justify-center items-center h-screen bg-gradient bg-gradient-to-t from-white to-pink-100">
         <div class="p-2 shadow-lg rounded-lg">
 
             <h1 class="font-mono text-xl p-2 rounded-lg text-pink-400 shadow">Hi ! I am panda, whats your name ?</h1>
