@@ -12,7 +12,7 @@
                             placeholder="panda@email.com" />
                     </div>
                     <button type="button"
-                        class="rounded-lg border border-pink-500 bg-pink-500 px-3 py-1.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-pink-600 hover:bg-pink-600 focus:ring focus:ring-pink-200 disabled:cursor-not-allowed disabled:border-pink-300 disabled:bg-pink-300">Submit</button>
+                        class="rounded-lg border border-pink-500 bg-pink-500 px-3 py-1.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-pink-600 hover:bg-pink-600 focus:ring focus:ring-pink-200 disabled:cursor-not-allowed disabled:border-pink-300 disabled:bg-pink-300">Sign-In</button>
                 </form>
             </div>
         </div>
