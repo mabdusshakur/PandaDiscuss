@@ -1,7 +1,6 @@
 <script setup>
-import ChatWindow from './ChatWindow.vue';
-import UserList from './UserList.vue';
-
+import UserList from '../../Components/Dashboard/UserList.vue';
+import ChatWindow from '../../Components/Dashboard/ChatWindow.vue';
 </script>
 <template>
     <div>
