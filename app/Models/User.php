@@ -23,6 +23,7 @@ class User extends Authenticatable
     ];
 
     protected $attributes = [
+        'name' => 'Panda',
         'otp' => 0
     ];
 
