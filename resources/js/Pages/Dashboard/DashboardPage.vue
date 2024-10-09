@@ -11,7 +11,6 @@ const conversationId = ref(0);
 
 // Function to open chat window
 const openChatWindow = (id) => {
-    console.log('open chat window', id);
     conversationId.value = id;
     showChatWindow.value = true;
 };
