@@ -27,7 +27,7 @@ class JwtMiddleware
             return response()->json(['error' => 'Unauthorized.'], 401);
         }
 
-        $request->auth = $credentials->sub;
+        $request['auth'] = $credentials->sub;
         return $next($request);
     }
 }
