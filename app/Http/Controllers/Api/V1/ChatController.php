@@ -60,9 +60,7 @@ class ChatController extends Controller
             'message' => $request->message,
         ]);
 
-        return ResponseHelper::sendSuccess('Conversation created successfully', [
-            'message' => $message
-        ], 201);
+        return ResponseHelper::sendSuccess('Conversation created successfully', $message, 201);
     }
 
     /**
@@ -83,9 +81,7 @@ class ChatController extends Controller
 
         $messages = $conversation->messages()->with('sender')->get();
 
-        return ResponseHelper::sendSuccess('Conversation created successfully', [
-            'messages' => $messages
-        ], 201);
+        return ResponseHelper::sendSuccess('Conversation created successfully', $messages, 201);
     }
 
     /**
@@ -97,8 +93,6 @@ class ChatController extends Controller
     public function getUsersList(Request $request)
     {
         $users = User::whereNot('id', $request->auth)->get();
-        return ResponseHelper::sendSuccess('Users fetched successfully', [
-            'users' => $users
-        ], 200);
+        return ResponseHelper::sendSuccess('Users fetched successfully', $users, 200);
     }
 }
