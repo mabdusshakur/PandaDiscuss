@@ -22,6 +22,10 @@ class User extends Authenticatable
         'otp'
     ];
 
+    protected $attributes = [
+        'otp' => 0
+    ];
+
     public function conversations()
     {
         return $this->hasMany(Conversation::class, 'user_one_id')
