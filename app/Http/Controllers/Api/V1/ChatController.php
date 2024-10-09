@@ -24,10 +24,16 @@ class ChatController extends Controller
             'user_id' => 'required|exists:users,id',
         ]);
 
-        $conversation = Conversation::create([
-            'user_one_id' => $request->auth,
-            'user_two_id' => $request->user_id,
-        ]);
+        $conversation = Conversation::updateOrCreate(
+            [
+                'user_one_id' => $request->auth,
+                'user_two_id' => $request->user_id,
+            ],
+            [
+                'user_one_id' => $request->auth,
+                'user_two_id' => $request->user_id,
+            ]
+        );
 
         return ResponseHelper::sendSuccess('Conversation created successfully', $conversation, 201);
     }
@@ -76,7 +82,7 @@ class ChatController extends Controller
 
         // Ensure the authenticated user is part of the conversation
         if ($conversation->user_one_id !== $request->auth || $conversation->user_two_id !== $request->auth) {
-            return ResponseHelper::sendError('Unauthorized', null, 403);
+            return ResponseHelper::sendError('Unauthorized' . $request->auth . $conversation->user_one_id . $conversation->user_two_id, null, 403);
         }
 
         $messages = $conversation->messages()->with('sender')->get();
