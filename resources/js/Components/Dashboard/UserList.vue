@@ -29,7 +29,7 @@ const addConversation = async (id) => {
         user_id: id,
     }).then((response) => {
         console.log(response.data[0]);
-        openChatWindow(reseponse.data[0].id);
+        openChatWindow(response.data[0].id);
     }).catch((error) => {
         console.log(error.response);
     });
