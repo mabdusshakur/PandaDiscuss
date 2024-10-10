@@ -17,10 +17,9 @@ const chatContainer = ref(null);
 const renderChatList = async () => {
     await axios.get(`/conversation/${props.conversationId}/messages`).then((response) => {
         messages.value = response.data[0];
-        scrollToBottom();
         console.log(messages.value);
     }).catch((error) => {
-        console.log(error.response.data.message);
+        console.log(error);
     });
 }
 
@@ -33,7 +32,7 @@ const sendMessage = async () => {
         renderChatList();
         // messages.value.push(response.data[0]);
     }).catch((error) => {
-        console.log(error.response.data.message);
+        console.log(error);
     });
 }
 
