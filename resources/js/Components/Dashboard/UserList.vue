@@ -23,7 +23,7 @@ const addConversation = async (id) => {
     await axios.post('/conversation', {
         user_id: id,
     }).then((response) => {
-        console.log(response.data[0]);
+        // console.log(response.data[0]);
         emit('openChatWindow', response.data[0].id);
     }).catch((error) => {
         console.log(error.response);
