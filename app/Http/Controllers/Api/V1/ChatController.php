@@ -56,7 +56,7 @@ class ChatController extends Controller
         $conversation = Conversation::findOrFail($conversationId);
 
         // Ensure the authenticated user is part of the conversation
-        if ($conversation->user_one_id !== $request->auth || $conversation->user_two_id !== $request->auth) {
+        if ($conversation->user_one_id !== $request->auth && $conversation->user_two_id !== $request->auth) {
             return ResponseHelper::sendError('Unauthorized', null, 403);
         }
 
@@ -81,7 +81,7 @@ class ChatController extends Controller
         $conversation = Conversation::findOrFail($conversationId);
 
         // Ensure the authenticated user is part of the conversation
-        if ($conversation->user_one_id !== $request->auth || $conversation->user_two_id !== $request->auth) {
+        if ($conversation->user_one_id !== $request->auth && $conversation->user_two_id !== $request->auth) {
             return ResponseHelper::sendError('Unauthorized' . $request->auth . $conversation->user_one_id . $conversation->user_two_id, null, 403);
         }
 
