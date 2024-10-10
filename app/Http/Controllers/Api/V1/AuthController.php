@@ -92,7 +92,8 @@ class AuthController extends Controller
             }
 
             return ResponseHelper::sendSuccess('OTP verified successfully', [
-                'token' => $token
+                'token' => $token,
+                'user' => $user
             ], 200);
 
         } catch (\Throwable $th) {
