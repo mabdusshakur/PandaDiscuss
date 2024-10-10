@@ -20,6 +20,7 @@ const verify = () => {
         if (response.data.success == true) {
             sessionStorage.removeItem('email');
             localStorage.setItem('token', response.data[0].token);
+            localStorage.setItem('user', JSON.stringify(response.data[0].user));
             router.visit('/dashboard');
         }
     }).catch((error) => {
