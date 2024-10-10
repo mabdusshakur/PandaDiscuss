@@ -6,11 +6,6 @@ const emit = defineEmits({
     openChatWindow: null,
 });
 
-// Function to fire the openChatWindow event
-function openChatWindow(id) {
-    emit('openChatWindow', id);
-}
-
 // user list
 const users = reactive([]);
 
@@ -29,7 +24,7 @@ const addConversation = async (id) => {
         user_id: id,
     }).then((response) => {
         console.log(response.data[0]);
-        openChatWindow(response.data[0].id);
+        emit('openChatWindow', response.data[0].id);
     }).catch((error) => {
         console.log(error.response);
     });
