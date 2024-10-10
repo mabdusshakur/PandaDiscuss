@@ -24,16 +24,20 @@ class ChatController extends Controller
             'user_id' => 'required|exists:users,id',
         ]);
 
-        $conversation = Conversation::updateOrCreate(
-            [
+        $conversation = Conversation::where(function ($query) use ($request) {
+            $query->where('user_one_id', $request->auth)
+                ->where('user_two_id', $request->user_id);
+        })->orWhere(function ($query) use ($request) {
+            $query->where('user_one_id', $request->user_id)
+                ->where('user_two_id', $request->auth);
+        })->first();
+
+        if (!$conversation) {
+            $conversation = Conversation::create([
                 'user_one_id' => $request->auth,
                 'user_two_id' => $request->user_id,
-            ],
-            [
-                'user_one_id' => $request->auth,
-                'user_two_id' => $request->user_id,
-            ]
-        );
+            ]);
+        }
 
         return ResponseHelper::sendSuccess('Conversation created successfully', $conversation, 201);
     }
