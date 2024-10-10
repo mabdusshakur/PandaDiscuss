@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onMounted, defineEmits } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 
 // Define the emit function
 const emit = defineEmits({
