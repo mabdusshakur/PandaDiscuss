@@ -7,6 +7,7 @@ use App\Helpers\JWTToken;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
@@ -119,6 +120,33 @@ class AuthController extends Controller
             return ResponseHelper::sendSuccess('Logout Success', 'Logout Success');
         } catch (\Throwable $th) {
             return ResponseHelper::sendError('User logout failed', 200, $th->getMessage());
+        }
+    }
+
+
+
+
+    /**
+     * Summary of broadcastAuth
+     * This method is used to authenticate the user for broadcasting
+     * 
+     * @param \Illuminate\Http\Request $request
+     * - socket_id: string
+     * - channel_name: string
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function broadcastAuth(Request $request)
+    {
+        $socketId = $request->input('socket_id');
+        $channelName = $request->input('channel_name');
+
+        try {
+            // Generate the required format for the response
+            $stringToAuth = $socketId . ':' . $channelName;
+            $hashed = hash_hmac('sha256', $stringToAuth, env('REVERB_APP_SECRET'));
+            return response(['auth' => env('REVERB_APP_KEY') . ':' . $hashed]);
+        } catch (Exception $e) {
+            return response(['message' => 'Cannot authenticate reverb'], 403);
         }
     }
 }
