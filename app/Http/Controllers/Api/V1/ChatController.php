@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Events\MessageSent;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Conversation;
@@ -69,6 +70,8 @@ class ChatController extends Controller
             'sender_id' => $request->auth,
             'message' => $request->message,
         ]);
+
+        broadcast(new MessageSent($message))->toOthers();
 
         return ResponseHelper::sendSuccess('Conversation created successfully', $message, 201);
     }
