@@ -9,6 +9,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 
+// Channel for Conversation
 Broadcast::channel('conversation.{conversationId}', function ($user, $conversationId) {
     $conversation = Conversation::where('id', $conversationId)->first();
 
@@ -24,4 +25,22 @@ Broadcast::channel('conversation.{conversationId}', function ($user, $conversati
     }
 
     return $conversation && ($conversation->user_one_id === (int) $credentials->sub || $conversation->user_two_id === (int) $credentials->sub);
+});
+
+
+
+// Channel for MessageNotification
+Broadcast::channel('notifications.{receiverId}', function ($user, $receiverId) {
+    $token = request()->bearerToken();
+
+    if (!$token) {
+        return false;
+    }
+
+    $credentials = JWTToken::decodeToken($token);
+    if ($credentials === 'Unauthorized') {
+        return false;
+    }
+
+    return (int) $credentials->sub === (int) $receiverId;
 });
