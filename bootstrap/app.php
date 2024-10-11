@@ -16,6 +16,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             HandleInertiaRequests::class,
         ]);
+
+        /*
+        It is important to exclude the broadcasting/auth route from CSRF token validation
+        because it is used by Laravel Echo Server to authenticate users
+        */
+        $middleware->validateCsrfTokens(except: [
+            '/broadcasting/auth',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
