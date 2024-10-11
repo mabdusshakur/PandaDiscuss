@@ -13,11 +13,20 @@ const messages = ref([]);
 const auth_user = JSON.parse(localStorage.getItem('user'))['id'];
 const chatContainer = ref(null);
 
+
+// function to subscribe to MessageSent event channel
+function subscribeMessageSentChannel() {
+    window.Echo.private(`conversation.${props.conversationId}`).listen('.MessageSent', (e) => {
+
+        // Push the message to the messages list
+        messages.value.push(e.message);
+    });
+}
+
 // function to render chat list
 const renderChatList = async () => {
     await axios.get(`/conversation/${props.conversationId}/messages`).then((response) => {
         messages.value = response.data[0];
-        console.log(messages.value);
     }).catch((error) => {
         console.log(error);
     });
@@ -29,8 +38,6 @@ const sendMessage = async () => {
         message: message.value,
     }).then((response) => {
         message.value = '';
-        renderChatList();
-        // messages.value.push(response.data[0]);
     }).catch((error) => {
         console.log(error);
     });
@@ -40,11 +47,13 @@ const sendMessage = async () => {
 // Watch the conversationId
 watch(() => props.conversationId, async (newValue, oldValue) => {
     await renderChatList();
+    subscribeMessageSentChannel();
 })
 
 onMounted(async () => {
     console.log('Chat Window Mounted', auth_user);
 })
+
 
 </script>
 
@@ -52,7 +61,7 @@ onMounted(async () => {
 <template>
     <div v-if="showChatWindow" class="flex flex-col h-full">
         <header class="sticky top-0 bg-blue-200 p-4 text-center font-bold">
-            You are talking to Panda {{ conversationId }}
+            You are talking to Panda
         </header>
 
         <section class="flex-1 bg-blue-50 p-4 flex flex-col">
