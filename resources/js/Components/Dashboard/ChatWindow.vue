@@ -23,6 +23,20 @@ function subscribeMessageSentChannel() {
     });
 }
 
+// function to subscribe to MessageNotification event channel
+function subscribeMessageNotificationChannel() {
+    window.Echo.private(`notifications.${auth_user}`).listen('.MessageNotification', (e) => {
+
+        /*
+         Check if the message is from the current conversation or not,
+         If not, show an alert
+        */
+        if (e.message.conversation_id !== props.conversationId) {
+            alert('New Message Received from ' + e.message.sender_id);
+        }
+    });
+}
+
 // function to render chat list
 const renderChatList = async () => {
     await axios.get(`/conversation/${props.conversationId}/messages`).then((response) => {
@@ -52,6 +66,7 @@ watch(() => props.conversationId, async (newValue, oldValue) => {
 
 onMounted(async () => {
     console.log('Chat Window Mounted', auth_user);
+    subscribeMessageNotificationChannel();
 })
 
 
