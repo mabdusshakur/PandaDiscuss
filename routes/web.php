@@ -1,8 +1,13 @@
 <?php
 
-use App\Http\Controllers\Frontend\PageController;
+use App\Models\User;
+use App\Helpers\JWTToken;
+use App\Http\Controllers\Api\V1\AuthController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Frontend\PageController;
+use App\Http\Middleware\JwtMiddleware;
+use Illuminate\Support\Facades\Broadcast;
 
 // Home Route
 Route::get('/', [PageController::class, 'homePage'])->name('home');
@@ -40,3 +45,16 @@ Route::get('/dashboard', [PageController::class, 'dashboardPage'])->name('dashbo
 |
 */
 Route::get('/profile', [PageController::class, 'profilePage'])->name('profile');
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Laravel Echo Server Routes
+|--------------------------------------------------------------------------
+|
+| This route is used to authenticate users for the Laravel Echo Server.
+|
+*/
+Route::post('/broadcasting/auth', [AuthController::class, 'broadcastAuth']);
