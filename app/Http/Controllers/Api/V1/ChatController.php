@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Events\MessageNotification;
 use App\Events\MessageSent;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
@@ -72,6 +73,11 @@ class ChatController extends Controller
         ]);
 
         broadcast(new MessageSent($message))->toOthers();
+
+
+        // Dispatch the MessageNotification event for the other user
+        $receiverId = $conversation->user_one_id === $request->auth ? $conversation->user_two_id : $conversation->user_one_id;
+        broadcast(new MessageNotification($message, $receiverId))->toOthers();
 
         return ResponseHelper::sendSuccess('Conversation created successfully', $message, 201);
     }
