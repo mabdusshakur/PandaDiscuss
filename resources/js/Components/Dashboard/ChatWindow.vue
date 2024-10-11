@@ -19,7 +19,9 @@ function subscribeMessageSentChannel() {
     window.Echo.private(`conversation.${props.conversationId}`).listen('.MessageSent', (e) => {
 
         // Push the message to the messages list
-        messages.value.push(e.message);
+        if (e.message.conversation_id == props.conversationId) {
+            messages.value.push(e.message);
+        }
     });
 }
 
@@ -41,6 +43,7 @@ function subscribeMessageNotificationChannel() {
 const renderChatList = async () => {
     await axios.get(`/conversation/${props.conversationId}/messages`).then((response) => {
         messages.value = response.data[0];
+        console.log("Called renderchat");
     }).catch((error) => {
         console.log(error);
     });
