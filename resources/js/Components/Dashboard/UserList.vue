@@ -7,12 +7,15 @@ const emit = defineEmits({
 });
 
 // user list
-const users = reactive([]);
+const users = ref([]);
 
 // Function to get the list of users
 const getUserList = async () => {
     await axios.get('/users').then((response) => {
-        users.push(...response.data[0]);
+        users.value = response.data[0].map(user => ({
+            ...user,
+            isOnline: false,
+        }));
     }).catch((error) => {
         console.log(error);
     });
@@ -30,10 +33,38 @@ const addConversation = async (id) => {
     });
 }
 
+// Function to update user status
+// const updateUserStatus = (userList, isOnline) => {
+//     userList.forEach(user => {
+//         const index = users.value.findIndex(u => u.id === user.id);
+//         if (index !== -1) {
+//             users.value[index].isOnline = isOnline;
+//         }
+//     });
+// };
+
+// Listen for presence channel events
+// const subscribeToPresenceChannel = () => {
+//     window.Echo.join('user-status').here(users => {
+//         console.log('Init', users);
+//         updateUserStatus(users, true);
+//     }).joining(user => {
+//         console.log('Joining', user);
+//         updateUserStatus([user], true);
+//     }).leaving(user => {
+//         console.log('Leaving', user);
+//         updateUserStatus([user], false);
+//     }).listen('UserStatus', (e) => {
+//         console.log('UserStatus', e);
+//     });
+// };
 
 // Call the getUserList function on component mount
 onMounted(async () => {
     await getUserList();
+
+    // Not working yet
+    // subscribeToPresenceChannel();
 })
 
 </script>
@@ -46,7 +77,8 @@ onMounted(async () => {
                 <div class="relative h-8 w-8">
                     <img class="h-full w-full rounded-full object-cover object-center" src="/public/img/logo.png"
                         alt="" />
-                    <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-green-400 ring ring-white"></span>
+                    <span :class="{ 'bg-green-400': user.isOnline, 'bg-gray-400': !user.isOnline }"
+                        class="absolute top-0 right-0 h-2 w-2 rounded-full ring ring-white"></span>
                 </div>
                 <span>{{ user.name }}</span>
             </div>
