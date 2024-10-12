@@ -13,6 +13,13 @@ const messages = ref([]);
 const auth_user = JSON.parse(localStorage.getItem('user'))['id'];
 const chatContainer = ref(null);
 
+const scrollToBottom = () => {
+    nextTick(() => {
+        if (chatContainer.value) {
+            chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+        }
+    });
+};
 
 // function to subscribe to MessageSent event channel
 function subscribeMessageSentChannel() {
@@ -55,6 +62,7 @@ const sendMessage = async () => {
         message: message.value,
     }).then((response) => {
         message.value = '';
+        scrollToBottom();
     }).catch((error) => {
         console.log(error);
     });
@@ -67,9 +75,16 @@ watch(() => props.conversationId, async (newValue, oldValue) => {
     subscribeMessageSentChannel();
 })
 
+watch(messages, (newMessages, oldMessages) => {
+    if (newMessages.length !== oldMessages.length) {
+        scrollToBottom();
+    }
+});
+
 onMounted(async () => {
     console.log('Chat Window Mounted', auth_user);
     subscribeMessageNotificationChannel();
+    scrollToBottom();
 })
 
 
@@ -103,11 +118,15 @@ onMounted(async () => {
             <div class="sticky bottom-0 flex items-center bg-blue-50 p-4">
                 <input type="text" class="flex-1 p-2 border rounded-lg" placeholder="Your Message to panda ?"
                     v-model="message" @keyup.enter="sendMessage" />
-                <button class="ml-2 p-2 bg-pink-500 text-white rounded-lg" v-on:click="sendMessage">Send</button>
+                <button class="ml-2 p-2 bg-pink-500 text-white rounded-lg" @click="sendMessage">Send</button>
             </div>
         </section>
     </div>
 </template>
 
-
-<style scoped></style>
+<style scoped>
+.scrollable {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+</style>
