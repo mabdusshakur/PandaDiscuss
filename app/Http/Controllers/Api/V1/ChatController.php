@@ -95,7 +95,7 @@ class ChatController extends Controller
 
         // Ensure the authenticated user is part of the conversation
         if ($conversation->user_one_id !== $request->auth && $conversation->user_two_id !== $request->auth) {
-            return ResponseHelper::sendError('Unauthorized' . $request->auth . $conversation->user_one_id . $conversation->user_two_id, null, 403);
+            return ResponseHelper::sendError('Unauthorized', null, 403);
         }
 
         $messages = $conversation->messages()->with('sender')->get();
