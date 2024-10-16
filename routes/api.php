@@ -35,6 +35,6 @@ Route::middleware([JwtMiddleware::class])->group(function () {
     Route::post('/conversation', [ChatController::class, 'createConversation']);
     Route::post('/conversation/{conversationId}/message', [ChatController::class, 'sendMessage']);
     Route::get('/conversation/{conversationId}/messages', [ChatController::class, 'getMessages']);
-    Route::get('/users', [ChatController::class, 'getUsersList']);
+    Route::get('/users', [UserController::class, 'getUsersList']);
     Route::patch('/users', [UserController::class, 'updateUser']);
 });
