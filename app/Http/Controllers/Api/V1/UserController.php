@@ -32,4 +32,16 @@ class UserController extends Controller
             return ResponseHelper::sendError('User not found', [], 404);
         }
     }
+
+    /**
+     * Summary of getUsersList
+     * @param \Illuminate\Http\Request $request
+     * - auth: int (Authenticated user ID) - This is automatically added by the @file \JwtMiddleware.php
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function getUsersList(Request $request)
+    {
+        $users = User::whereNot('id', $request->auth)->get();
+        return ResponseHelper::sendSuccess('Users fetched successfully', $users, 200);
+    }
 }
