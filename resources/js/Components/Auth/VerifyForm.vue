@@ -17,14 +17,14 @@ const verify = () => {
         otp: otp.value,
         email: sessionStorage.getItem('email'),
     }).then((response) => {
-        if (response.data.success == true) {
+        if (response.status === 200) {
             sessionStorage.removeItem('email');
-            localStorage.setItem('token', response.data[0].token);
-            localStorage.setItem('user', JSON.stringify(response.data[0].user));
+            localStorage.setItem('token', response.data.access_token);
+            localStorage.setItem('user', JSON.stringify(response.data.user));
             router.visit('/dashboard');
         }
     }).catch((error) => {
-        console.log(error);
+        console.log(error.response.data.message);
     });
 }
 
