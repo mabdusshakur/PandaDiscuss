@@ -22,7 +22,10 @@ class UserController extends Controller
             'name' => 'required|string'
         ]);
 
-        $user = User::where('id', $request->auth)->first();
+        // Get the authenticated user ID
+        $auth_id = auth('api')->user()->id;
+
+        $user = User::where('id', $auth_id)->first();
         if ($user) {
             $user->update([
                 'name' => $request->name
@@ -41,7 +44,12 @@ class UserController extends Controller
      */
     public function getUsersList(Request $request)
     {
-        $users = User::whereNot('id', $request->auth)->get();
+        // Get the authenticated user ID
+        $auth_id = auth('api')->user()->id;
+
+        // Get all users except the authenticated user
+        $users = User::whereNot('id', $auth_id)->get();
+
         return ResponseHelper::sendSuccess('Users fetched successfully', $users, 200);
     }
 }
