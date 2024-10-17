@@ -127,9 +127,9 @@ class AuthController extends Controller
 
 
     /**
+     * @deprecated - This method is not used anymore
      * Summary of broadcastAuth
      * This method is used to authenticate the user for broadcasting
-     * 
      * @param \Illuminate\Http\Request $request
      * - socket_id: string
      * - channel_name: string
