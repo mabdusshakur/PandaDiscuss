@@ -17,7 +17,7 @@ const getUserList = async () => {
             isOnline: false,
         }));
     }).catch((error) => {
-        console.log(error);
+        console.log(error.response.data.message);
     });
 }
 
@@ -29,7 +29,7 @@ const addConversation = async (id) => {
         // console.log(response.data[0]);
         emit('openChatWindow', response.data[0].id);
     }).catch((error) => {
-        console.log(error.response);
+        console.log(error.response.data.message);
     });
 }
 
