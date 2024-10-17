@@ -45,16 +45,3 @@ Route::get('/dashboard', [PageController::class, 'dashboardPage'])->name('dashbo
 |
 */
 Route::get('/profile', [PageController::class, 'profilePage'])->name('profile');
-
-
-
-
-/*
-|--------------------------------------------------------------------------
-| Laravel Echo Server Routes
-|--------------------------------------------------------------------------
-|
-| This route is used to authenticate users for the Laravel Echo Server.
-|
-*/
-Route::post('/broadcasting/auth', [AuthController::class, 'broadcastAuth']);
