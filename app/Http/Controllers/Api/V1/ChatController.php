@@ -26,17 +26,20 @@ class ChatController extends Controller
             'user_id' => 'required|exists:users,id',
         ]);
 
-        $conversation = Conversation::where(function ($query) use ($request) {
-            $query->where('user_one_id', $request->auth)
+        // Get the authenticated user ID
+        $auth_id = auth('api')->user()->id;
+
+        $conversation = Conversation::where(function ($query) use ($auth_id, $request) {
+            $query->where('user_one_id', $auth_id)
                 ->where('user_two_id', $request->user_id);
-        })->orWhere(function ($query) use ($request) {
+        })->orWhere(function ($query) use ($auth_id, $request) {
             $query->where('user_one_id', $request->user_id)
-                ->where('user_two_id', $request->auth);
+                ->where('user_two_id', $auth_id);
         })->first();
 
         if (!$conversation) {
             $conversation = Conversation::create([
-                'user_one_id' => $request->auth,
+                'user_one_id' => $auth_id,
                 'user_two_id' => $request->user_id,
             ]);
         }
@@ -59,16 +62,19 @@ class ChatController extends Controller
             'message' => 'required|string',
         ]);
 
+        // Get the authenticated user ID
+        $auth_id = auth('api')->user()->id;
+
         $conversation = Conversation::findOrFail($conversationId);
 
         // Ensure the authenticated user is part of the conversation
-        if ($conversation->user_one_id !== $request->auth && $conversation->user_two_id !== $request->auth) {
+        if ($conversation->user_one_id !== $auth_id && $conversation->user_two_id !== $auth_id) {
             return ResponseHelper::sendError('Unauthorized', null, 403);
         }
 
         $message = Message::create([
             'conversation_id' => $conversationId,
-            'sender_id' => $request->auth,
+            'sender_id' => $auth_id,
             'message' => $request->message,
         ]);
 
@@ -76,7 +82,7 @@ class ChatController extends Controller
 
 
         // Dispatch the MessageNotification event for the other user
-        $receiverId = $conversation->user_one_id === $request->auth ? $conversation->user_two_id : $conversation->user_one_id;
+        $receiverId = $conversation->user_one_id === $auth_id ? $conversation->user_two_id : $conversation->user_one_id;
         broadcast(new MessageNotification($message, $receiverId))->toOthers();
 
         return ResponseHelper::sendSuccess('Conversation created successfully', $message, 201);
@@ -92,9 +98,11 @@ class ChatController extends Controller
     public function getMessages(Request $request, $conversationId)
     {
         $conversation = Conversation::findOrFail($conversationId);
+        // Get the authenticated user ID
+        $auth_id = auth('api')->user()->id;
 
         // Ensure the authenticated user is part of the conversation
-        if ($conversation->user_one_id !== $request->auth && $conversation->user_two_id !== $request->auth) {
+        if ($conversation->user_one_id !== $auth_id && $conversation->user_two_id !== $auth_id) {
             return ResponseHelper::sendError('Unauthorized', null, 403);
         }
 
