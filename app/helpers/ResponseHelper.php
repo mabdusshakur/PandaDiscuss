@@ -51,7 +51,7 @@ class ResponseHelper
      * @param mixed $guard - default is 'api'
      * @return JsonResponse|mixed
      */
-    protected function respondWithToken($token, $guard = 'api')
+    public static function respondWithToken($token, $guard = 'api')
     {
         /** @var JWTGuard $auth*/
         $auth = auth($guard);
