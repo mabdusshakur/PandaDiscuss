@@ -51,7 +51,7 @@ class ResponseHelper
      * @param mixed $guard - default is 'api'
      * @return JsonResponse|mixed
      */
-    public static function respondWithToken($token, $guard = 'api')
+    public static function respondWithToken($token, $user = null, $guard = 'api')
     {
         /** @var JWTGuard $auth*/
         $auth = auth($guard);
@@ -59,7 +59,8 @@ class ResponseHelper
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => $auth->factory()->getTTL() * 60
+            'expires_in' => $auth->factory()->getTTL() * 60,
+            'user' => $user
         ]);
     }
 }
