@@ -42,4 +42,20 @@ class ResponseHelper
 
         return response()->json($response, $statusCode);
     }
+
+
+    /**
+     * Summary of respondWithToken
+     * @param mixed $token
+     * @param mixed $guard - default is 'api'
+     * @return JsonResponse|mixed
+     */
+    protected function respondWithToken($token, $guard = 'api')
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth($guard)->factory()->getTTL() * 60
+        ]);
+    }
 }
