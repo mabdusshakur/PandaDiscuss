@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use Illuminate\Http\JsonResponse;
+use Tymon\JWTAuth\JWTGuard;
 
 class ResponseHelper
 {
@@ -52,10 +53,13 @@ class ResponseHelper
      */
     protected function respondWithToken($token, $guard = 'api')
     {
+        /** @var JWTGuard $auth*/
+        $auth = auth($guard);
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth($guard)->factory()->getTTL() * 60
+            'expires_in' => $auth->factory()->getTTL() * 60
         ]);
     }
 }
