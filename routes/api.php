@@ -31,7 +31,7 @@ Route::post('/logout', [AuthController::class, 'userLogout'])->name('logout');
 |
 */
 
-Route::middleware([JwtMiddleware::class])->group(function () {
+Route::middleware('auth:api')->group(function () {
     Route::post('/conversation', [ChatController::class, 'createConversation']);
     Route::post('/conversation/{conversationId}/message', [ChatController::class, 'sendMessage']);
     Route::get('/conversation/{conversationId}/messages', [ChatController::class, 'getMessages']);
