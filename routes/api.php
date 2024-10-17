@@ -5,8 +5,10 @@ use App\Http\Controllers\Api\V1\ChatController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Middleware\JwtMiddleware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
+Broadcast::routes(['middleware' => ['auth:api']]);
 
 /*
 |--------------------------------------------------------------------------
