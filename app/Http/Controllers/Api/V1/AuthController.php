@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use Exception;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\JsonResponse;
+use Tymon\JWTAuth\JWTGuard;
 
 class AuthController extends Controller
 {
@@ -85,18 +87,14 @@ class AuthController extends Controller
             $user->otp = 0;
             $user->save();
 
-            $expiryTime = 60 * 60 * 24 * 30; // seconds * minutes * hours * days
-            $token = JWTToken::createToken($user->id, $expiryTime);
 
-            if (!$token) {
-                return ResponseHelper::sendError('Token creation failed', 200);
-            }
+            // Login the user and generate a JWT token
 
-            return ResponseHelper::sendSuccess('OTP verified successfully', [
-                'token' => $token,
-                'user' => $user
-            ], 200);
+            /** @var JWTGuard $auth */
+            $auth = auth('api');
+            $token = $auth->login($user);
 
+            return ResponseHelper::respondWithToken($token, $user);
         } catch (\Throwable $th) {
             return ResponseHelper::sendError("Failed to verify OTP", $th->getMessage(), 500);
         }
@@ -111,12 +109,9 @@ class AuthController extends Controller
     function userLogout(Request $request)
     {
         try {
-            // Invalidate the token 
-            $token = $request->bearerToken();
-            if ($token) {
-                JWTToken::invalidateToken($token);
-            }
-            // Clear the token from cookie
+            $auth = auth('api');
+            $auth->logout();
+
             return ResponseHelper::sendSuccess('Logout Success', 'Logout Success');
         } catch (\Throwable $th) {
             return ResponseHelper::sendError('User logout failed', 200, $th->getMessage());
