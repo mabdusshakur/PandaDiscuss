@@ -34,37 +34,34 @@ const addConversation = async (id) => {
 }
 
 // Function to update user status
-// const updateUserStatus = (userList, isOnline) => {
-//     userList.forEach(user => {
-//         const index = users.value.findIndex(u => u.id === user.id);
-//         if (index !== -1) {
-//             users.value[index].isOnline = isOnline;
-//         }
-//     });
-// };
+const updateUserStatus = (userList, isOnline) => {
+    userList.forEach(user => {
+        const index = users.value.findIndex(u => u.id === user.id);
+        if (index !== -1) {
+            users.value[index].isOnline = isOnline;
+        }
+    });
+};
 
 // Listen for presence channel events
-// const subscribeToPresenceChannel = () => {
-//     window.Echo.join('user-status').here(users => {
-//         console.log('Init', users);
-//         updateUserStatus(users, true);
-//     }).joining(user => {
-//         console.log('Joining', user);
-//         updateUserStatus([user], true);
-//     }).leaving(user => {
-//         console.log('Leaving', user);
-//         updateUserStatus([user], false);
-//     }).listen('UserStatus', (e) => {
-//         console.log('UserStatus', e);
-//     });
-// };
+const subscribeToPresenceChannel = () => {
+    window.Echo.join('user-status').here(users => {
+        updateUserStatus(users, true);
+    }).joining(user => {
+        updateUserStatus([user], true);
+    }).leaving(user => {
+        updateUserStatus([user], false);
+    }).listen('UserStatus', (e) => {
+        console.log('UserStatus', e);
+    });
+};
 
 // Call the getUserList function on component mount
 onMounted(async () => {
     await getUserList();
 
     // Not working yet
-    // subscribeToPresenceChannel();
+    subscribeToPresenceChannel();
 })
 
 </script>
